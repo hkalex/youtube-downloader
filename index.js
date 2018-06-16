@@ -1,31 +1,24 @@
-const downloadVideo = require('./downloadVideo');
+let argv = process.argv;
 
-const list = require('./list');
+if (argv.length < 3) {
+  console.log(`The usage is
+npm start "youtube_link" "outputfolder"
 
-const startIndex = 3;
-const endIndex = 10;
+youtube_link:
+  - the video link or playlist link
 
-const prefix = 'PeppaPig-E';
-const outputFolder = './download/';
+outputfolder:
+  - optional speciy the output folder path. The default is the current folder.
 
-const sleep = (milliseconds) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve()
-    }, milliseconds);
-  })
+
+For example:
+  npm start "https://www.youtube.com/watch?v=LKaXY4IdZ40" .
+  npm start "https://www.youtube.com/playlist?list=PLEFA9E9D96CB7F807" .
+  `);
+  process.exit(1);
 }
 
-(async (startIndex, endIndex, prefix, outputFolder) => {
-  for (let i = startIndex; i <= endIndex; i++) {
-    try {
-      let filename = outputFolder + prefix + i.toString() + '.mp4';
-      console.log(filename);
-      await downloadVideo(list[i], filename)
-      //await sleep(5000);
-    } catch (ex) {
-      console.log(ex);
-      console.log('ERROR');
-    }
-  }
-})(startIndex, endIndex, prefix, outputFolder);
+
+let url = argv[2];
+let output = argv[3] || '.';
+require('./src/download')(url, output);
